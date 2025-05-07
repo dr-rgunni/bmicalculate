@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BMI Calculator</title>
+  </head>
+<body>
+  <div class="container">
+    <!-- Department header -->
+    <div class="header">
+      <img src="vpsv.png" alt="VPSV Logo"/>
+      <h2>Department of Roganidana<br>VPSV Ayurveda College Kottakkal</h2>
+    </div>
+
+    <!-- BMI title container -->
+    <div class="title-container">
+      <h4>BMI Calculator</h4>
+      <hr/>
+    </div>
+
+    <!-- inputs -->
+    <div class="input-group">
+      <input
+        type="number" id="height" placeholder="Height in cms"
+        step="1" min="0"
+        oninput="this.value = this.value.replace(/\D/g,'')"
+      />
+    </div>
+    <div class="input-group">
+      <input
+        type="number" id="weight" placeholder="Weight in Kg"
+        step="1" min="0"
+        oninput="this.value = this.value.replace(/\D/g,'')"
+      />
+    </div>
+
+    <!-- buttons -->
+    <div class="button-group">
+      <button id="calculate" class="btn calculate-btn">Calculate score</button>
+      <button id="reset"      class="btn reset-btn">Reset</button>
+    </div>
+
+    <!-- results -->
+    <div id="result-section" class="result-section">
+      <div id="bmi-label" class="bmi-label">Your BMI</div>
+      <div id="bmi-value" class="bmi-value">--</div>
+
+      <div class="legend">
+        <div id="legend-under"  class="legend-item">
+          <span class="legend-color under"></span>Under Weight
+        </div>
+        <div id="legend-normal" class="legend-item">
+          <span class="legend-color normal"></span>Normal
+        </div>
+        <div id="legend-over"   class="legend-item">
+          <span class="legend-color over"></span>Over Weight
+        </div>
+        <div id="legend-obese"  class="legend-item">
+          <span class="legend-color obese"></span>Obesity
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-item">
+          <div>Healthy BMI range</div>
+          <div>18.5 - 24.9</div>
+        </div>
+        <div class="info-item">
+          <div>Healthy weight for this height</div>
+          <div id="healthy-weight">-- Kg</div>
+        </div>
+      </div>
+
+      <div class="action-box">
+        <div>Action</div>
+        <div id="action-text">--</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const bmiEl   = document.getElementById('bmi-value');
+    const resSec  = document.getElementById('result-section');
+    const items   = {
+      under:  document.getElementById('legend-under'),
+      normal: document.getElementById('legend-normal'),
+      over:   document.getElementById('legend-over'),
+      obese:  document.getElementById('legend-obese')
+    };
+
+    document.getElementById('calculate').addEventListener('click', () => {
+      const h = parseFloat(document.getElementById('height').value);
+      const w = parseFloat(document.getElementById('weight').value);
+      if (!Number.isInteger(h) || !Number.isInteger(w) || h <= 0 || w <= 0) {
+        alert('Please enter positive whole numbers for height and weight.');
+        return;
+      }
+
+      const m   = h / 100;
+      const bmi = w / (m * m);
+      bmiEl.textContent = bmi.toFixed(2);
+
+      bmiEl.className = 'bmi-value';
+      if      (bmi < 18.5)  bmiEl.classList.add('bmi-under');
+      else if (bmi <= 24.9) bmiEl.classList.add('bmi-normal');
+      else if (bmi <= 29.9) bmiEl.classList.add('bmi-over');
+      else                  bmiEl.classList.add('bmi-obese');
+
+      Object.values(items).forEach(el => el.classList.remove('blink'));
+      if      (bmi < 18.5)  items.under.classList.add('blink');
+      else if (bmi <= 24.9) items.normal.classList.add('blink');
+      else if (bmi <= 29.9) items.over.classList.add('blink');
+      else                  items.obese.classList.add('blink');
+
+      const minW = 18.5 * m * m;
+      const maxW = 24.9 * m * m;
+      document.getElementById('healthy-weight').textContent =
+        `${Math.round(minW)} - ${Math.round(maxW)} Kg`;
+
+      const actionEl = document.getElementById('action-text');
+      if (bmi > 24.9) {
+        actionEl.textContent = `Lose ${Math.round(w - maxW)} Kg`;
+      } else if (bmi < 18.5) {
+        actionEl.textContent = `Gain ${Math.round(minW - w)} Kg`;
+      } else {
+        actionEl.textContent = 'Maintain weight';
+      }
+
+      resSec.style.display = 'block';
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      document.getElementById('height').value = '';
+      document.getElementById('weight').value = '';
+      resSec.style.display = 'none';
+      bmiEl.textContent = '--';
+      bmiEl.className = 'bmi-value';
+      Object.values(items).forEach(el => el.classList.remove('blink'));
+    });
+  </script>
+</body>
+</html>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Page</title>
+<meta name="generator" content="WYSIWYG Web Builder 15 - http://www.wysiwygwebbuilder.com">
+<link href="BMI.css" rel="stylesheet">
+<link href="index.css" rel="stylesheet">
+</head>
+<body>
+</body>
+</html>
